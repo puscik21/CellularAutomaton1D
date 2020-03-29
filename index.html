@@ -7,11 +7,15 @@
         <script type="text/javascript" src="board.js"></script>
     </head>
 <body>
-    <h1>1D Cellular automaton</h1>
+    <h1 style="text-align:center; color:white">1D Cellular automaton</h1>
 
     <div id="testDiv">
         <p id="test" style="color:white; font-size:25px">test</p>
     </div>
+    Cells per row<input type="text" id="cellsPerRow" name="fname"><br>
+    <input type="button" id="start" value="Start" onclick="start()">
+    <input type="button" id="pause" value="Pause" onclick="pause()">
+    <input type="button" id="clear" value="Clear" onclick="clearCanvas()">
     <div>
         <canvas id="board" width="400" height="400"></canvas>
     </div>
