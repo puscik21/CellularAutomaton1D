@@ -9,26 +9,98 @@ var cellsPerRow;
 var isPaused = true;
 var rulesTable;
 var presSquareSize = 50;
+var chartCount = 0;
 
 window.onload = function() {
     canvas = document.getElementById("board");
     context = canvas.getContext("2d");
+    initColorAgenda();
+    initStrokeOfBoard();
     initRulesMap();
     initRulesTable();
-    // TODO
-    // initChart();
+    initChart();
 };
 
-function initChart() {
-    Plotly.plot('chart', [{
-        y: [getRandomInt(5)],
-        type: 'line'
-    }]);
+function initColorAgenda() {
+    for (let i = 0; i < 3; i++) {
+        let agendaCanvas = document.getElementById('board' + i);
+        let agendaContext = agendaCanvas.getContext('2d');
+
+        agendaContext.fillStyle = getColorForValue(i);
+        agendaContext.fillRect(0, 0, presSquareSize, presSquareSize);
+        agendaContext.strokeRect(0, 0, presSquareSize, presSquareSize);
+    }
 }
+
+function initStrokeOfBoard() {
+    context.strokeRect(0, 0, canvas.width, canvas.height);
+}
+
+function initChart() {
+    let traceRed = {
+        y: [0],
+        mode: 'lines',
+        name: 'Red',
+        line: {
+            color: 'rgb(209, 46, 81)',
+            width: 5
+        }
+    };
+
+    let traceGreen = {
+        y: [0],
+        mode: 'lines',
+        name: 'Green',
+        line: {
+            color: 'rgb(219, 196, 48)',
+            width: 5
+        }
+    };
+
+    let traceBlue = {
+        y: [0],
+        mode: 'lines',
+        name: 'Blue',
+        line: {
+            color: 'rgb(47, 133, 209)',
+            width: 5
+        }
+    };
+
+    let data = [traceRed, traceGreen, traceBlue];
+    let layout = {
+        title: 'Quantity of each color in row'
+    };
+    Plotly.newPlot('chart', data, layout);
+}
+
+function updateChart() {
+    Plotly.extendTraces('chart', {y: [[countFields(0)]]}, [0]);
+    Plotly.extendTraces('chart', {y: [[countFields(1)]]}, [1]);
+    Plotly.extendTraces('chart', {y: [[countFields(2)]]}, [2]);
+    chartCount++;
+    if (chartCount > 50) {
+        Plotly.relayout('chart', {
+            xaxis: {
+                range: [chartCount - 50, chartCount]
+            }
+        });
+    }
+}
+
+function countFields(value) {
+    let count = 0;
+    for (let i = 0; i < rowValues.length; i++) {
+        if (rowValues[i] === value) {
+            count++;
+        }
+    }
+    return count;
+}
+
 
 function initRulesTable() {
     rulesTable = document.getElementById('rules-table').getElementsByTagName('tbody')[0];
-
     let arr = Array.from(rules.keys());
     for (let i = 0; i < 27; i++) {
         addRuleRow(arr[i], i);
@@ -55,7 +127,7 @@ function addRuleRow(ruleStr, i) {
     for (let i = 0; i < 3; i++) {
         canvasContext.fillStyle = getColorForValue(parseInt(ruleStr[i]));
         canvasContext.fillRect(i * presSquareSize, 0, presSquareSize, presSquareSize);
-        canvasContext.strokeRect(i * presSquareSize, 0, presSquareSize, presSquareSize)   // draw the border around the cell
+        canvasContext.strokeRect(i * presSquareSize, 0, presSquareSize, presSquareSize);   // draw the border around the cell
     }
 
     let ruleResult = rules.get(ruleStr);
@@ -147,6 +219,7 @@ function drawLine() {
         context.fillRect(xOffset, yOffset, squareSize, squareSize);
         context.strokeRect(xOffset, yOffset, squareSize, squareSize);   // draw border around the cell
     }
+    updateChart();
 
     calculateRowValues();
     if (!isPaused) {
