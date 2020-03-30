@@ -8,13 +8,23 @@ var timer = 0;
 var cellsPerRow;
 var isPaused = true;
 var rulesTable;
+var presSquareSize = 50;
 
 window.onload = function() {
     canvas = document.getElementById("board");
     context = canvas.getContext("2d");
     initRulesMap();
     initRulesTable();
+    // TODO
+    // initChart();
 };
+
+function initChart() {
+    Plotly.plot('chart', [{
+        y: [getRandomInt(5)],
+        type: 'line'
+    }]);
+}
 
 function initRulesTable() {
     rulesTable = document.getElementById('rules-table').getElementsByTagName('tbody')[0];
@@ -26,7 +36,6 @@ function initRulesTable() {
 }
 
 function addRuleRow(ruleStr, i) {
-    let squareSize = 50;
     let lastRow;
     if (i % 3 === 0) {
         lastRow = rulesTable.insertRow(rulesTable.rows.length);
@@ -45,16 +54,16 @@ function addRuleRow(ruleStr, i) {
     let canvasContext = ruleCanvas.getContext("2d");
     for (let i = 0; i < 3; i++) {
         canvasContext.fillStyle = getColorForValue(parseInt(ruleStr[i]));
-        canvasContext.fillRect(i * squareSize, 0, squareSize, squareSize);
-        canvasContext.strokeRect(i * squareSize, 0, squareSize, squareSize)   // draw the border around the cell
+        canvasContext.fillRect(i * presSquareSize, 0, presSquareSize, presSquareSize);
+        canvasContext.strokeRect(i * presSquareSize, 0, presSquareSize, presSquareSize)   // draw the border around the cell
     }
 
     let ruleResult = rules.get(ruleStr);
     canvasContext.fillStyle = getColorForValue(ruleResult);
-    canvasContext.fillRect(squareSize, squareSize, squareSize, squareSize);
-    canvasContext.strokeRect(squareSize, squareSize, squareSize, squareSize);  // draw the border around the cell
+    canvasContext.fillRect(presSquareSize, presSquareSize, presSquareSize, presSquareSize);
+    canvasContext.strokeRect(presSquareSize, presSquareSize, presSquareSize, presSquareSize);  // draw the border around the cell
 
-    ruleCanvas.id = 'canvas' + i;   // proper value (if needed)
+    ruleCanvas.id = 'canvas' + i;
     canvasCell.appendChild(ruleCanvas);
 
     let ruleForm = document.createElement('form');
@@ -69,9 +78,21 @@ function addRuleRow(ruleStr, i) {
     ruleSelect.appendChild(ruleOption0);
     ruleSelect.appendChild(ruleOption1);
     ruleSelect.appendChild(ruleOption2);
+    ruleSelect.onchange = () => changeRuleCanvasResult(ruleCanvas.id, i, ruleSelect.selectedIndex);
     ruleForm.appendChild(ruleSelect);
     labelCell.appendChild(ruleForm);
     ruleSelect.selectedIndex = ruleResult;
+}
+
+function changeRuleCanvasResult(canvasId, ruleNumber, newResultValue) {
+    let ruleStr = decimalToTrinary(ruleNumber);
+    let ruleCanvas = document.getElementById(canvasId);
+    let canvasContext = ruleCanvas.getContext("2d");
+
+    rules.set(ruleStr, newResultValue);
+    canvasContext.fillStyle = getColorForValue(newResultValue);
+    canvasContext.fillRect(presSquareSize, presSquareSize, presSquareSize, presSquareSize);
+    canvasContext.strokeRect(presSquareSize, presSquareSize, presSquareSize, presSquareSize);
 }
 
 function start() {

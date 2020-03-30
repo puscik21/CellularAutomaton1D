@@ -5,20 +5,24 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" type="text/css"/>
         <script type="text/javascript" src="board.js"></script>
+        <script type="text/javascript" src="plotly.min.js"></script>
     </head>
 <body>
     <h1 class="white-title">1D Cellular automaton</h1>
 
-    <div id="testDiv">
-        <p id="test" style="color:white; font-size:25px">test</p>
-    </div>
-    Cells per row<input type="text" id="cellsPerRow" name="fname"><br>
-    <input type="button" id="start" value="Start" onclick="start()">
-    <input type="button" id="pause" value="Pause" onclick="pause()">
-    <input type="button" id="clear" value="Clear" onclick="clearCanvas()">
+<!--    Cells per row <input type="text" id="cellsPerRow" name="fname"><br>-->
+<!--    <input type="button" id="start" value="Start" onclick="start()">-->
+<!--    <input type="button" id="pause" value="Pause" onclick="pause()">-->
+<!--    <input type="button" id="clear" value="Clear" onclick="clearCanvas()">-->
     <div>
-        <div>
-            <canvas id="board" width="600" height="600" class="board"></canvas>
+        <div id="buttons-div">
+            Cells per row <input type="text" id="cellsPerRow" name="fname"><br>
+            <input type="button" class="button" id="start" value="Start" onclick="start()">
+            <input type="button" class="button" id="pause" value="Pause" onclick="pause()">
+            <input type="button" class="button" id="clear" value="Clear" onclick="clearCanvas()">
+        </div>
+        <div id="board-div">
+            <canvas id="board" width="600" height="600" style="clear: both; float:left"></canvas>
         </div>
         <div id="rules-table" class="rules-table">
             <table>

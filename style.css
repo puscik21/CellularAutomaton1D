@@ -13,12 +13,25 @@ body {
     font-size: 20px;
 }
 
-.board {
-    float: left;
+.button {
+    width: 70px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
 }
 
-.rules-table {
-    margin-left: 10px;
+#rules-table {
+    float: right;
+    margin-right: 30px;
     background: #999999;
+}
+
+#buttons-div {
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+#presentation {
     float: left;
+    margin-left: 30px;
 }
