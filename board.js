@@ -36,67 +36,6 @@ function initStrokeOfBoard() {
     context.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
-function initChart() {
-    let traceRed = {
-        y: [0],
-        mode: 'lines',
-        name: 'Red',
-        line: {
-            color: 'rgb(209, 46, 81)',
-            width: 5
-        }
-    };
-
-    let traceGreen = {
-        y: [0],
-        mode: 'lines',
-        name: 'Green',
-        line: {
-            color: 'rgb(219, 196, 48)',
-            width: 5
-        }
-    };
-
-    let traceBlue = {
-        y: [0],
-        mode: 'lines',
-        name: 'Blue',
-        line: {
-            color: 'rgb(47, 133, 209)',
-            width: 5
-        }
-    };
-
-    let data = [traceRed, traceGreen, traceBlue];
-    let layout = {
-        title: 'Quantity of each color in row'
-    };
-    Plotly.newPlot('chart', data, layout);
-}
-
-function updateChart() {
-    Plotly.extendTraces('chart', {y: [[countFields(0)]]}, [0]);
-    Plotly.extendTraces('chart', {y: [[countFields(1)]]}, [1]);
-    Plotly.extendTraces('chart', {y: [[countFields(2)]]}, [2]);
-    chartCount++;
-    if (chartCount > 50) {
-        Plotly.relayout('chart', {
-            xaxis: {
-                range: [chartCount - 50, chartCount]
-            }
-        });
-    }
-}
-
-function countFields(value) {
-    let count = 0;
-    for (let i = 0; i < rowValues.length; i++) {
-        if (rowValues[i] === value) {
-            count++;
-        }
-    }
-    return count;
-}
 
 
 function initRulesTable() {
@@ -167,6 +106,45 @@ function changeRuleCanvasResult(canvasId, ruleNumber, newResultValue) {
     canvasContext.strokeRect(presSquareSize, presSquareSize, presSquareSize, presSquareSize);
 }
 
+function initChart() {
+    let traceRed = {
+        y: [0],
+        mode: 'lines',
+        name: 'Red',
+        line: {
+            color: 'rgb(209, 46, 81)',
+            width: 5
+        }
+    };
+
+    let traceGreen = {
+        y: [0],
+        mode: 'lines',
+        name: 'Green',
+        line: {
+            color: 'rgb(219, 196, 48)',
+            width: 5
+        }
+    };
+
+    let traceBlue = {
+        y: [0],
+        mode: 'lines',
+        name: 'Blue',
+        line: {
+            color: 'rgb(47, 133, 209)',
+            width: 5
+        }
+    };
+
+    let data = [traceRed, traceGreen, traceBlue];
+    let layout = {
+        title: 'Quantity of each color in row'
+    };
+    Plotly.newPlot('chart', data, layout);
+}
+
+// ### start button ###
 function start() {
     if (isPaused && document.getElementById('cellsPerRow').value !== '') {
         cellsPerRow = document.getElementById('cellsPerRow').value;
@@ -207,27 +185,55 @@ function drawLine() {
     }
 
     for (let i = 0; i < rowValues.length; i++) {
-        if (rowValues[i] === 0) {
-            context.fillStyle = "#d12e51";  // red
-        } else if (rowValues[i] === 1) {
-            context.fillStyle = "#dbc430";  // green
-        } else if (rowValues[i] === 2) {
-            context.fillStyle = "#2f85d1";  // blue
-        }
+        context.fillStyle = getColorForValue(rowValues[i]);
         let xOffset = i * squareSize;
         let yOffset = currentRow * squareSize;
         context.fillRect(xOffset, yOffset, squareSize, squareSize);
         context.strokeRect(xOffset, yOffset, squareSize, squareSize);   // draw border around the cell
     }
     updateChart();
+    calculateNextRowValues();
 
-    calculateRowValues();
     if (!isPaused) {
         timer = setTimeout(drawLine, 500);
     }
 }
 
-function calculateRowValues() {
+function getColorForValue(value) {
+    if (value === 0) {
+        return "#d12e51";  // red
+    } else if (value === 1) {
+        return "#dbc430";  // green
+    } else if (value === 2) {
+        return "#2f85d1";  // blue
+    }
+}
+
+function updateChart() {
+    Plotly.extendTraces('chart', {y: [[countFields(0)]]}, [0]);
+    Plotly.extendTraces('chart', {y: [[countFields(1)]]}, [1]);
+    Plotly.extendTraces('chart', {y: [[countFields(2)]]}, [2]);
+    chartCount++;
+    if (chartCount > 50) {
+        Plotly.relayout('chart', {
+            xaxis: {
+                range: [chartCount - 50, chartCount]
+            }
+        });
+    }
+}
+
+function countFields(value) {
+    let count = 0;
+    for (let i = 0; i < rowValues.length; i++) {
+        if (rowValues[i] === value) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function calculateNextRowValues() {
     let temp = [];
     let rowSize = rowValues.length;
     for (let i = 1; i < rowSize - 1; i++) {
@@ -300,23 +306,6 @@ function decimalToTrinary(dec) {
     return '' + val3 + val2 + val1;
 }
 
-function getColorForValue(value) {
-    if (value === 0) {
-        return "#d12e51";  // red
-    } else if (value === 1) {
-        return "#dbc430";  // green
-    } else if (value === 2) {
-        return "#2f85d1";  // blue
-    }
-}
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
-}
-
-function changeText(name) {
-    document.getElementById(name).innerHTML = Date();
-    document.getElementById(name).style.fontSize = "25px";
-    document.getElementById(name).style.color = "red";
-    document.getElementById(name).style.backgroundColor = "yellow";
 }
