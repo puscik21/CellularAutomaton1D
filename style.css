@@ -1,3 +1,23 @@
 body {
     background-color: #aaaaaa;
 }
+
+.white-title {
+    text-align:center;
+    color:white;
+}
+
+.white {
+    text-align:center;
+    color:white;
+    font-size: 20px;
+}
+
+.board {
+    float: left;
+}
+
+.rules-table {
+    background: red;
+    float: left;
+}

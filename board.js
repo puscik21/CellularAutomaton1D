@@ -3,16 +3,58 @@
 var canvas, context;
 var rules;
 var rowValues;
-var currentRow = 0;
+var currentRow = -1;
 var timer = 0;
 var cellsPerRow;
 var isPaused = true;
+var rulesTable;
 
 window.onload = function() {
     canvas = document.getElementById("board");
     context = canvas.getContext("2d");
     initRulesMap();
+    initRulesTable();
 };
+
+function initRulesTable() {
+    rulesTable = document.getElementById('rules-table').getElementsByTagName('tbody')[0];
+
+    let arr = Array.from(rules.keys());
+    for (let i = 0; i < 27; i++) {
+        addRuleRow(arr[i], i);
+    }
+}
+
+function addRuleRow(ruleStr, i) {
+    let squareSize = 50;
+    let lastRow;
+    if (i % 3 === 0) {
+        lastRow = rulesTable.insertRow(rulesTable.rows.length);
+    } else {
+        lastRow = rulesTable.rows[rulesTable.rows.length - 1];
+    }
+
+    let labelCell = lastRow.insertCell();
+    let ruleNumber = document.createTextNode(ruleStr);
+    labelCell.appendChild(ruleNumber);
+
+    let canvasCell = lastRow.insertCell();
+    let ruleCanvas = document.createElement('canvas');
+    let canvasContext = ruleCanvas.getContext("2d");
+    for (let i = 0; i < 3; i++) {
+        canvasContext.fillStyle = getColorForValue(parseInt(ruleStr[i]));
+        canvasContext.fillRect(i * squareSize, 0, squareSize, squareSize);
+        canvasContext.strokeRect(i * squareSize, 0, squareSize, squareSize)   // draw the border around the cell
+    }
+
+    let ruleResult = rules.get(ruleStr);
+    canvasContext.fillStyle = getColorForValue(ruleResult);
+    canvasContext.fillRect(squareSize, squareSize, squareSize, squareSize);
+    canvasContext.strokeRect(squareSize, squareSize, squareSize, squareSize);  // draw the border around the cell
+
+    ruleCanvas.id = 'canvas' + 1;   // proper value (if needed)
+    canvasCell.appendChild(ruleCanvas);
+}
 
 function start() {
     if (isPaused && document.getElementById('cellsPerRow').value !== '') {
@@ -41,7 +83,7 @@ function clearCanvas() {
     if (isPaused) {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
-    currentRow = 0;
+    currentRow = -1;
 }
 
 function drawLine() {
@@ -64,7 +106,7 @@ function drawLine() {
         let xOffset = i * squareSize;
         let yOffset = currentRow * squareSize;
         context.fillRect(xOffset, yOffset, squareSize, squareSize);
-        context.strokeRect(xOffset, yOffset, squareSize, squareSize)   // draw the border around the cell
+        context.strokeRect(xOffset, yOffset, squareSize, squareSize);   // draw border around the cell
     }
 
     calculateRowValues();
@@ -144,6 +186,16 @@ function decimalToTrinary(dec) {
     dec -= val2 * 3;
     let val1 = dec;
     return '' + val3 + val2 + val1;
+}
+
+function getColorForValue(value) {
+    if (value === 0) {
+        return "#d12e51";  // red
+    } else if (value === 1) {
+        return "#dbc430";  // green
+    } else if (value === 2) {
+        return "#2f85d1";  // blue
+    }
 }
 
 function getRandomInt(max) {

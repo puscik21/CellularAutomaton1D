@@ -7,7 +7,7 @@
         <script type="text/javascript" src="board.js"></script>
     </head>
 <body>
-    <h1 style="text-align:center; color:white">1D Cellular automaton</h1>
+    <h1 class="white-title">1D Cellular automaton</h1>
 
     <div id="testDiv">
         <p id="test" style="color:white; font-size:25px">test</p>
@@ -17,7 +17,16 @@
     <input type="button" id="pause" value="Pause" onclick="pause()">
     <input type="button" id="clear" value="Clear" onclick="clearCanvas()">
     <div>
-        <canvas id="board" width="400" height="400"></canvas>
+        <div>
+            <canvas id="board" width="400" height="400" class="board"></canvas>
+        </div>
+        <div id="rules-table" class="rules-table">
+            <table>
+                <tr>
+                    <th class="white">Rules</th>
+                </tr>
+            </table>
+        </div>
     </div>
     
 </body>
