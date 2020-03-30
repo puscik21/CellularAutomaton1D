@@ -40,6 +40,8 @@ function addRuleRow(ruleStr, i) {
 
     let canvasCell = lastRow.insertCell();
     let ruleCanvas = document.createElement('canvas');
+    ruleCanvas.width = 200;  // default 302.4
+    ruleCanvas.height = 150;  // default 302.4
     let canvasContext = ruleCanvas.getContext("2d");
     for (let i = 0; i < 3; i++) {
         canvasContext.fillStyle = getColorForValue(parseInt(ruleStr[i]));
@@ -52,8 +54,24 @@ function addRuleRow(ruleStr, i) {
     canvasContext.fillRect(squareSize, squareSize, squareSize, squareSize);
     canvasContext.strokeRect(squareSize, squareSize, squareSize, squareSize);  // draw the border around the cell
 
-    ruleCanvas.id = 'canvas' + 1;   // proper value (if needed)
+    ruleCanvas.id = 'canvas' + i;   // proper value (if needed)
     canvasCell.appendChild(ruleCanvas);
+
+    let ruleForm = document.createElement('form');
+    let ruleSelect = document.createElement('select');
+    let ruleOption0 = document.createElement('option');
+    ruleOption0.innerHTML = '0';
+    let ruleOption1 = document.createElement('option');
+    ruleOption1.innerHTML = '1';
+    let ruleOption2 = document.createElement('option');
+    ruleOption2.innerHTML = '2';
+
+    ruleSelect.appendChild(ruleOption0);
+    ruleSelect.appendChild(ruleOption1);
+    ruleSelect.appendChild(ruleOption2);
+    ruleForm.appendChild(ruleSelect);
+    labelCell.appendChild(ruleForm);
+    ruleSelect.selectedIndex = ruleResult;
 }
 
 function start() {
@@ -82,8 +100,8 @@ function pause() {
 function clearCanvas() {
     if (isPaused) {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        currentRow = -1;
     }
-    currentRow = -1;
 }
 
 function drawLine() {

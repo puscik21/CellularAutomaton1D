@@ -18,6 +18,7 @@ body {
 }
 
 .rules-table {
-    background: red;
+    margin-left: 10px;
+    background: #999999;
     float: left;
 }
