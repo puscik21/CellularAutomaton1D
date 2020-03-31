@@ -36,10 +36,14 @@ function initStrokeOfBoard() {
     context.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
-
-
 function initRulesTable() {
-    rulesTable = document.getElementById('rules-table').getElementsByTagName('tbody')[0];
+    let parent = document.getElementById('rules-table');
+    while(parent.hasChildNodes()) {
+        parent.removeChild(parent.firstChild);
+    }
+    rulesTable = document.createElement('tbody');
+    parent.appendChild(rulesTable);
+
     let arr = Array.from(rules.keys());
     for (let i = 0; i < 27; i++) {
         addRuleRow(arr[i], i);
@@ -148,7 +152,9 @@ function initChart() {
 function start() {
     if (isPaused && document.getElementById('cellsPerRow').value !== '') {
         cellsPerRow = document.getElementById('cellsPerRow').value;
-        initRowValues();
+        if (rowValues == null) {
+            initRowValues();
+        }
         timer = setTimeout(drawLine, 500);
         isPaused = false;
     }
@@ -251,12 +257,7 @@ function countCellValue(ruleValue) {
 function initRulesMap() {
     let arr = [];
 
-    // for (let i = 0; i < 27; i++) {
-    //     let ruleNumber = decimalToTrinary(i);
-    //     arr.push([ruleNumber, 1]);
-    // }
-
-    // for test purposes only
+    // standard rules map
     arr.push(['000', 0]);
     arr.push(['001', 0]);
     arr.push(['002', 0]);
@@ -288,13 +289,15 @@ function initRulesMap() {
     rules = new Map(arr);
 }
 
-function trinaryToDecimal(tri) {
-    let triStr = tri.toString();
-    let val3 = triStr[0];
-    let val2 = triStr[1];
-    let val1 = triStr[2];
+function initRandomRule() {
+    let arr = [];
 
-    return val3 *3*3 + val2 *3 + val1*1;
+    for (let i = 0; i < 27; i++) {
+        let ruleNumber = decimalToTrinary(i);
+        arr.push([ruleNumber, getRandomInt(3)]);
+    }
+    rules = new Map(arr);
+    initRulesTable();
 }
 
 function decimalToTrinary(dec) {

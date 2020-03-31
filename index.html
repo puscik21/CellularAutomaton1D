@@ -12,10 +12,11 @@
     <div>
         <div id="top-div">
             <div id="buttons-div">
-                Cells per row <input type="text" id="cellsPerRow" name="fname"><br>
+                <div id="cells-per-row-label">Cells per row <input type="text" id="cellsPerRow" name="fname"><br></div>
                 <input type="button" class="button" id="start" value="Start" onclick="start()">
                 <input type="button" class="button" id="pause" value="Pause" onclick="pause()">
                 <input type="button" class="button" id="clear" value="Clear" onclick="clearCanvas()">
+                <input type="button" class="button" id="randRule" value="Random rule" onclick="initRandomRule()">
             </div>
             <div id="colorAgenda">
                 <h2>0<canvas id="board0" class="colorAgendaRect" width="50" height="50"></canvas>

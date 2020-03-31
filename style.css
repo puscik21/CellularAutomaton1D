@@ -1,5 +1,5 @@
 body {
-    background-color: #aaaaaa;
+    background-color: #555555;
 }
 
 .white-title {
@@ -14,7 +14,7 @@ body {
 }
 
 .button {
-    width: 70px;
+    width: 100px;
     margin-left: 5px;
     margin-right: 5px;
     margin-top: 10px;
@@ -32,6 +32,17 @@ body {
 
 #buttons-div {
     float: left;
+}
+
+#cellsPerRow {
+    float: right;
+    margin-right: 50px;
+}
+
+#cells-per-row-label {
+    margin-left: 125px;
+    font-size: 20px;
+    color: white;
 }
 
 #colorAgenda {
@@ -62,5 +73,6 @@ body {
 #rules-table {
     float: right;
     margin-right: 30px;
-    background: #999999;
+    background: #666666;
+    color: #dddddd;
 }
